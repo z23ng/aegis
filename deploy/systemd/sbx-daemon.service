@@ -1,0 +1,19 @@
+[Unit]
+Description=Aegis (sbx) Host Control Plane Daemon
+Documentation=https://github.com/z23ng/aegis
+After=network.target containerd.service
+Wants=containerd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/sbx-daemon --socket /run/sbx/daemon.sock --http-addr 127.0.0.1:8090
+Restart=on-failure
+RestartSec=2
+LimitNOFILE=65536
+Delegate=yes
+RuntimeDirectory=sbx
+StateDirectory=sbx-daemon
+Environment=RUST_LOG=info
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-and-test:
+    name: Build, Static Guest Size & Workspace Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install system build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools binutils
+
+      - name: Install Rust toolchain with musl target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-musl
+
+      - name: Cache Cargo registry and build artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Verify sbx-proto no_std compilation
+        run: cargo check --no-default-features -p sbx-proto
+
+      - name: Build static musl sbx-guest-agent and assert < 1 MiB
+        run: |
+          cargo build --release --target x86_64-unknown-linux-musl -p sbx-guest-agent
+          BIN="target/x86_64-unknown-linux-musl/release/sbx-guest-agent"
+          SIZE=$(stat -c%s "$BIN")
+          echo "sbx-guest-agent size: ${SIZE} bytes"
+          test "$SIZE" -lt 1048576
+          if readelf -l "$BIN" | grep -q "INTERP"; then
+            echo "Error: sbx-guest-agent must not have PT_INTERP dynamic linker"
+            exit 1
+          fi
+
+      - name: Build release workspace
+        run: cargo build --release --workspace
+
+      - name: Run full workspace tests
+        run: cargo test --workspace
+
+      - name: Check Python SDK & deploy scripts
+        run: |
+          python3 -m py_compile sdks/python/sbx_client.py
+          bash -n deploy/kernel/build-kernel-initramfs.sh

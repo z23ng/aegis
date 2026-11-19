@@ -1,0 +1,18 @@
+[package]
+name = "sbx-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Isolation backend drivers (Native clone3/namespaces/cgroupv2, gVisor, MicroVM)"
+
+[dependencies]
+sbx-proto = { path = "../sbx-proto" }
+sbx-containerd = { path = "../sbx-containerd" }
+sbx-net = { path = "../sbx-net" }
+async-trait = "0.1"
+tokio = { version = "1", features = ["full"] }
+libc = "0.2"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tracing = "0.1"
+anyhow = "1.0"

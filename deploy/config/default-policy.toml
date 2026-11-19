@@ -1,0 +1,37 @@
+# Default AI Sandbox (sbx) Security Policy
+# Referenced by sbx-daemon and `sbx policy show`
+
+[runtime]
+# Isolation backend: "native" | "gvisor" | "microvm"
+backend = "native"
+
+[resources]
+cpu_cores = 2.0
+cpu_quota_us = 200000
+memory_limit_mb = 1024
+pids_limit = 128
+disk_quota_mb = 2048
+
+[security]
+# Seccomp-BPF filter level: "standard" | "strict" | "custom"
+seccomp_mode = "standard"
+readonly_rootfs = false
+writable_paths = ["/workspace", "/tmp"]
+
+[network]
+# Default-deny networking: "disabled" | "allowlist_proxy"
+net_mode = "disabled"
+block_private_cidrs = true
+egress_allowlist = []
+
+[lifecycle]
+max_ttl_sec = 3600
+idle_sleep_sec = 300
+auto_destroy = true
+
+# Example Zero-Trust Secret Injection binding:
+# [[secret_bindings]]
+# placeholder = "sbx_placeholder_gh_1"
+# allowed_hosts = ["api.github.com"]
+# header_name = "Authorization"
+# secret_ref = "github_pat"

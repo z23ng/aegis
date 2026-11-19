@@ -1,0 +1,10 @@
+[package]
+name = "sbx-guest-agent"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Minimal static PID 1 guest agent for AI Sandbox (sbx)"
+
+[dependencies]
+libc = { version = "0.2", default-features = false }
+sbx-proto = { path = "../sbx-proto", default-features = false }

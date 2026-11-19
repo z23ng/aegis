@@ -1,0 +1,15 @@
+[package]
+name = "sbx-proto"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Zero-dependency wire protocol and shared domain types for AI Sandbox (sbx)"
+
+[features]
+default = ["std"]
+std = ["serde/std", "thiserror/std"]
+
+[dependencies]
+postcard = { version = "1.0", default-features = false, features = ["alloc"] }
+serde = { version = "1.0", default-features = false, features = ["derive", "alloc"] }
+thiserror = { version = "2.0", default-features = false }

@@ -1,0 +1,29 @@
+[package]
+name = "sbx-daemon"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Host control plane daemon with warm pool and snapshot orchestration (Milestone 3)"
+
+[[bin]]
+name = "sbx-daemon"
+path = "src/main.rs"
+
+[dependencies]
+sbx-proto = { path = "../sbx-proto" }
+sbx-containerd = { path = "../sbx-containerd" }
+sbx-runtime = { path = "../sbx-runtime" }
+sbx-net = { path = "../sbx-net" }
+tokio = { version = "1", features = ["full"] }
+axum = { version = "0.8", default-features = false }
+hyper = { version = "1", features = ["http1", "server"] }
+hyper-util = { version = "0.1", features = ["tokio", "service"] }
+tower = "0.5"
+bytes = "1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+clap = { version = "4.5", features = ["derive", "env"] }
+libc = "0.2"

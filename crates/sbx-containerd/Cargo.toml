@@ -1,0 +1,26 @@
+[package]
+name = "sbx-containerd"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "containerd gRPC adapter for OCI images, leases, and OverlayFS snapshots"
+
+[dependencies]
+sbx-proto = { path = "../sbx-proto" }
+containerd-client = "0.9"
+tonic = "0.14"
+prost = "0.14"
+prost-types = "0.14"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
+libc = "0.2"
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
+flate2 = "1.0"
+tar = "0.4"
+sha2 = "0.10"
+hex = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tracing = "0.1"
+anyhow = "1.0"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
